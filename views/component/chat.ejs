@@ -1,0 +1,57 @@
+		<textarea class="form-control" id="messages" rows="20" readonly style="margin-bottom: 5%;"></textarea>
+		<form>
+			<div class="input-group">
+			  	<div class="input-group-prepend">
+					<label class="input-group-text" for="inputGroupSelect">Options</label>
+			  	</div>
+				<select class="custom-select" id="inputGroupSelect" onChange="disableInput()">
+					<option value="1">All</option>
+					<option value="2">Whisper</option>
+			  	</select>
+				<input class="form-control" id="id" type="text" autocomplete="off" disabled/>
+			</div>
+			<div class="input-group mb-3">
+				<input type="text" class="form-control" id="m" autocomplete="off" />
+				<button class="btn">Send</button>
+			</div>
+		</form>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+		<script>
+			//document ready 후에 mongodb에서 가져오기
+			$(function () {
+				var socket = io();
+				var chat={};
+				socket.emit('login', '<%= user.id %>');
+				loadChat();
+				$('form').submit(function(){
+					chat={'user':'<%= user.name %>','body':$('#m').val()};
+					if($('#inputGroupSelect').val()==1){
+						//전체
+						socket.emit('chat message', chat);
+					}else{
+						chat.to=$("#id").val();
+						socket.emit('whisper',chat);
+					}
+					//메시지를 저장하기
+					$('#m').val('');
+					return false;
+				});
+				socket.on('chat message', function(chat){
+      				$('#messages').append(chat.user+': '+chat.body+'\n');
+    			});
+			});
+			disableInput = function(){
+				if($('#inputGroupSelect').val()==1){
+					$("#id").prop('disabled', true);
+					$("#id").val('');
+				}
+				else $("#id").prop('disabled', false);
+			} 
+			loadChat = function(){
+				$.get( `/chat/list`, function( data ) {
+					data.map((message) => {
+						$('#messages').append(message.user+': '+message.body+'\n');
+					});
+				});
+			}
+		</script>

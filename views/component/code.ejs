@@ -1,0 +1,28 @@
+		<div id="textarea"></div>
+		<button type="button" class="btn btn-primary" onClick="save()">Save</button>
+		 <!-- Create a simple CodeMirror instance -->
+		<link rel="stylesheet" href="/lib/codemirror.css">
+		<script src="/lib/codemirror.js"></script>
+		  
+		<script>
+			var filename="<%= file %>";
+			var myCodeMirror;
+			$(function() {
+				console.log(filename);
+				$.get( `/show/get/${filename}`, function( data ) {
+					myCodeMirror = CodeMirror(document.getElementById("textarea"), {
+					  value: data,
+					  lineNumbers: true,
+					  mode:  "javascript"
+					});
+				});
+			});
+			var save=function(){
+				$.post( '/show/put', {
+					data: myCodeMirror.doc.getValue(),
+					file: filename
+				});
+				window.location.href = '/search/index';
+				console.log(myCodeMirror.doc.getValue());
+			}
+		</script>

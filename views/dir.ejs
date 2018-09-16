@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+	<% include ./component/link.ejs %>
+  </head>
+  <body>
+  	<% include ./component/navbar.ejs %>
+	<div class="container" style="margin-top: 10%;">
+	  <div class="text-center">
+		  <ul>
+			<% if(data){ %>
+				<% data.forEach((file)=>{ %>
+					<li>
+						<a href='/show/dir/<%= file %>'><%= file %></a>
+					</li> 
+			<%})}%>
+			<% if(!data){ %>
+				 NO FILE 
+			<%}%>
+		  </ul>
+		  <a href='/search'>Go to Search</a>
+	  </div>
+	</div>
+  </body>
+</html>

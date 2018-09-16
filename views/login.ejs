@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+	<% include ./component/link.ejs %>
+  </head>
+  <body>
+  	<% include ./component/navbar.ejs %>
+	<div class="container" style="margin-top: 10%;">
+		<div class="text-center">
+			<% if(message.length > 0) {%>
+				<div class= "alert alert-danger"><%= message %></div>
+			<% } %>
+			<% include ./component/login.ejs %>
+		</div>
+	</div>
+
+  </body>
+</html>
